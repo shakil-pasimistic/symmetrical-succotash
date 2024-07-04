@@ -50,6 +50,7 @@ jobs:
       run: |
         ssh $SSH_USERNAME@$SSH_HOST 'bash -s' <<'EOF'
           cd /var/www/tests/symmetrical-succotash
+          sudo chmod +x $(which node)
           npm install
           pm2 start src/index.js --name "symmetrical-succotash" || pm2 restart "symmetrical-succotash"
           pm2 save
