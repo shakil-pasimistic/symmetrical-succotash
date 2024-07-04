@@ -45,10 +45,10 @@ jobs:
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
-        scp -r ./* $SSH_USERNAME@$SSH_HOST:/var/www/tests
+        rsync -avz --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" ./ $SSH_USERNAME@$SSH_HOST:/var/www/tests/symmetrical-succotash
+        scp -r ./* $SSH_USERNAME@$SSH_HOST:/var/www/tests/symmetrical-succotash
         ssh $SSH_USERNAME@$SSH_HOST 'bash -s' <<'EOF'
           cd /var/www/tests/symmetrical-succotash
-          npm install --production
+          npm install
           npm run start
         EOF
-
