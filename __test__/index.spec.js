@@ -1,6 +1,6 @@
 import request from "supertest";
 
-import app from "../index";
+import app from "../src/app.js";
 
 describe('GET /status', () => {
   it('should return the server status of OK', async () => {
