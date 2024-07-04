@@ -41,7 +41,6 @@ jobs:
         rsync -avz --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" ./ $SSH_USERNAME@$SSH_HOST:/var/www/tests/symmetrical-succotash
         ssh $SSH_USERNAME@$SSH_HOST 'bash -s' <<'EOF'
           cd /var/www/tests/symmetrical-succotash
-          sudo chmod 700 $(which node)
           npm install
           npm run startpm2 start src/index.js --name "symmetrical-succotash" || pm2 restart "symmetrical-succotash"
           pm2 save
