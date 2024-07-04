@@ -28,12 +28,12 @@ jobs:
     - run: npm ci
     - run: npm run test
 
-    # - name: Test SSH Connection
-    #   env:
-    #     SSH_USER: ${{ secrets.SSH_USERNAME }}
-    #     SSH_HOST: ${{ secrets.SSH_HOST }}
-    #   run: |
-    #     ssh -v $SSH_USER@$SSH_HOST echo "SSH connection established"
+    - name: Test SSH Connection
+      env:
+        SSH_USER: ${{ secrets.SSH_USERNAME }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+      run: |
+        ssh -v $SSH_USER@$SSH_HOST echo "SSH connection established"
 
     - name: Deploy to Server
       env:
