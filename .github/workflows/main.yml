@@ -28,18 +28,26 @@ jobs:
     - run: npm ci
     - run: npm run test
 
+    - name: Set up SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Rsync files to the server
+      env:
+        SSH_USER: ${{ secrets.SSH_USERNAME }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+      run: |
+        rsync -avz --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" ./ $SSH_USERNAME@$SSH_HOST:/var/www/tests/symmetrical-succotash
+
     - name: Deploy to Server
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         SSH_HOST: ${{ secrets.SSH_HOST }}
         SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
       run: |
-        mkdir -p ~/.ssh
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
-        rsync -avz --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" ./ $SSH_USERNAME@$SSH_HOST:/var/www/tests/symmetrical-succotash
-        scp -r ./* $SSH_USERNAME@$SSH_HOST:/var/www/tests/symmetrical-succotash
         ssh $SSH_USERNAME@$SSH_HOST 'bash -s' <<'EOF'
           cd /var/www/tests/symmetrical-succotash
           npm install
