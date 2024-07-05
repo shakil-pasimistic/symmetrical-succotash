@@ -37,7 +37,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: echo "Build the application for production deployment"
+    - run: echo "Build the application for production deployment!"
 
 
   deploy:
@@ -54,4 +54,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: echo "Deploy the application to the production server"
+    - run: echo "Deploy the application to the production server!"
