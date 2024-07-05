@@ -116,3 +116,47 @@ jobs:
           npm run startpm2 start src/index.js --name "symmetrical-succotash" || pm2 restart "symmetrical-succotash"
           pm2 save
         EOF
+
+
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test_build_and_deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }} for test
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run test
+
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }} for build
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: echo "Build the application for production deployment!"
+
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }} for deploy
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: echo "Deploy the application to the production server!"
