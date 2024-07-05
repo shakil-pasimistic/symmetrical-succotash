@@ -40,6 +40,8 @@ jobs:
         ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
         rsync -avz --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" ./ $SSH_USERNAME@$SSH_HOST:/var/www/tests/symmetrical-succotash
         ssh $SSH_USERNAME@$SSH_HOST 'bash -s' <<'EOF'
+          which npm
+          which pm2
           sudo chmod +x $(which node)
           cd /var/www/tests/symmetrical-succotash
           node -v
