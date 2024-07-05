@@ -62,7 +62,7 @@ jobs:
       run: |
         echo "${SSH_PRIVATE_KEY}" > private_key.pem
         chmod 600 private_key.pem
-        rsync -avz --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" ./ $SSH_USERNAME@$SSH_HOST:/var/www/symmetrical-succotash
+        rsync -avz --no-times --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" ./ $SSH_USERNAME@$SSH_HOST:/var/www/symmetrical-succotash
         ssh -i private_key.pem ${SSH_USERNAME}@${SSH_HOST} 'bash -s' < ./scripts/deploy.sh
 
     - name: Clean up SSH key
