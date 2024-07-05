@@ -62,7 +62,11 @@ jobs:
       run: |
         echo "${SSH_PRIVATE_KEY}" > private_key.pem
         chmod 600 private_key.pem
-        ssh -i private_key.pem ${SSH_USERNAME}@${SSH_HOST} 'bash -s' < echo "Pushed all the source code!!!"
+        ssh -i private_key.pem ${SSH_USERNAME}@${SSH_HOST} 'bash -s' <<'EOF'
+          whoami
+          node -v
+          echo "Hello!"
+        EOF
 
     - name: Clean up SSH key
       run: rm private_key.pem
