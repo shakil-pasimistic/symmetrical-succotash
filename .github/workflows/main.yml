@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Node.js CI/CD Pipeline
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
       matrix:
         node-version: [20.x]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }} for test
       uses: actions/setup-node@v3
       with:
@@ -30,7 +30,7 @@ jobs:
       matrix:
         node-version: [20.x]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }} for build
       uses: actions/setup-node@v3
       with:
@@ -47,7 +47,7 @@ jobs:
       matrix:
         node-version: [20.x]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }} for deploy
       uses: actions/setup-node@v3
       with:
@@ -58,12 +58,6 @@ jobs:
       run: |
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
         chmod 600 private_key.pem
-
-    - name: Ensure known hosts file exists
-      run: touch ~/.ssh/known_hosts        
-
-    - name: Clear known hosts
-      run: echo "" > ~/.ssh/known_hosts
 
     - name: Deploy to the server
       env:
