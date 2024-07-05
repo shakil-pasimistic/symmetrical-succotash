@@ -65,6 +65,7 @@ jobs:
         SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
         SSH_HOST: ${{ secrets.SSH_HOST }}
       run: |
+        ssh-keyscan -H ${SSH_HOST} >> ~/.ssh/known_hosts
         ssh -tt -i "private_key.pem" ${SSH_USERNAME}@${SSH_HOST} << EOF
           whoami
           node -v
