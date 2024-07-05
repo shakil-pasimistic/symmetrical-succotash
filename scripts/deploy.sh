@@ -11,6 +11,5 @@ sudo chown -R $USER:$GROUP /var/www/symmetrical-succotash
 # Change to the directory and install dependencies
 cd /var/www/symmetrical-succotash
 npm install
-
 # Restart the application
 npm run test
