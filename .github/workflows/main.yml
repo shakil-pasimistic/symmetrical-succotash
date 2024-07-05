@@ -57,10 +57,10 @@ jobs:
     - name: Deploy to the server
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SERVER_USER: ${{ secrets.SERVER_USERNAME }}
-        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
       run: |
         echo "${SSH_PRIVATE_KEY}" > private_key.pem
         chmod 600 private_key.pem
         rsync -avz --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" ./ $SSH_USERNAME@$SSH_HOST:/var/www/symmetrical-succotash
-        ssh -i private_key.pem ${SERVER_USER}@${SERVER_HOST} 'bash -s' < ./scripts/deploy.sh
+        ssh -i private_key.pem ${SSH_USERNAME}@${SSH_HOST} 'bash -s' < ./scripts/deploy.sh
