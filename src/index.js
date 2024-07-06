@@ -1,14 +1,4 @@
-import express from "express";
-
-const app = express();
-
-app.get('/status', function (req, res) {
-    res.json({
-        code: 200,
-        success: true,
-        message: "OK"
-    })
-});
+import app from './app.js';
 
 const port = process.env.PORT || 3000;
 const environment = process.env.NODE_ENV || "development";
