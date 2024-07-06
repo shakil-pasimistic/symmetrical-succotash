@@ -38,17 +38,17 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} 'echo "SSH connection successful as root"'
 
-      # - name: Create remote directory
-      #   run: |
-      #     ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} << 'EOF'
-      #       sudo rm -rf ${{ env.REMOTE_DIR }}
-      #       sudo mkdir -p ${{ env.REMOTE_DIR }}
-      #       sudo chmod 755 ${{ env.REMOTE_DIR }}
-      #     EOF
+      - name: Create remote directory
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} << 'EOF'
+            sudo rm -rf ${{ env.REMOTE_DIR }}
+            sudo mkdir -p ${{ env.REMOTE_DIR }}
+            sudo chmod 777 -R ${{ env.REMOTE_DIR }}
+          EOF
 
       - name: Send the files to the server using scp
         run: |
-          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:${{ env.REMOTE_DIR }}
 
       - name: SSH and execute commands as root
         run: |
