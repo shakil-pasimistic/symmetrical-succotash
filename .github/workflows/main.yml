@@ -44,7 +44,7 @@ jobs:
 
       - name: Send the files to the server using rsync
         run: |
-          rsync -avz --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/var/www/symmetrical-succotash
+          rsync --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/var/www/symmetrical-succotash
 
       - name: SSH and execute commands as root
         run: |
