@@ -40,7 +40,11 @@ jobs:
 
       - name: Create remote directory
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} 'sudo mkdir -p ${{ env.REMOTE_DIR }}'
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} << 'EOF'
+            sudo rm -rf ${{ env.REMOTE_DIR }}  
+            sudo mkdir -p ${{ env.REMOTE_DIR }}
+            sudo chown -R ${{ env.SSH_USERNAME }} ${{ env.REMOTE_DIR }}
+          EOF
 
       - name: Send the files to the server using rsync
         run: |
