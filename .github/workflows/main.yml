@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: ['main']
 
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,25 +25,30 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Prepare SSH key
+      - name: Set up SSH key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
+          mkdir -p ~/.ssh
+          echo "${{ env.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-      - name: Deploy to the server
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
+      - name: Add known hosts
         run: |
-          ssh -tt -i "private_key.pem" ${SSH_USERNAME}@${SSH_HOST} << EOF
+          ssh-keyscan -H ${{ env.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Test SSH connection as root
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} 'echo "SSH connection successful as root"'
+
+      - name: SSH and execute commands as root
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} << 'EOF'
             whoami
-            node -v
             echo "Hello!"
+            node -v
           EOF
 
       - name: Clean up SSH key
-        run: rm private_key.pem
+        run: rm ~/.ssh/id_rsa
 # rsync -avz --no-times --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" ./ $SSH_USERNAME@$SSH_HOST:/
 
 # test:
