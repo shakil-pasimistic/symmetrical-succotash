@@ -60,7 +60,7 @@ jobs:
 
       - name: Send the files to the server using scp
         run: |
-          scp -r ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:${{ env.REMOTE_DIR }}
+          scp -r ./* ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/
 
       - name: SSH and execute commands as root
         run: |
