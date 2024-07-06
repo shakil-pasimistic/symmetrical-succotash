@@ -24,6 +24,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run test
+
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
@@ -48,7 +56,7 @@ jobs:
 
       - name: Send the files to the server using scp
         run: |
-          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:${{ env.REMOTE_DIR }}
+          scp -r ./* ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:${{ env.REMOTE_DIR }}
 
       - name: SSH and execute commands as root
         run: |
