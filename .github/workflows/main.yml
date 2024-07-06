@@ -10,6 +10,7 @@ env:
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
   SSH_HOST: ${{ secrets.SSH_HOST }}
+  REMOTE_DIR: '/var/www/symmetrical-succotash'
 
 jobs:
   deploy:
@@ -36,6 +37,10 @@ jobs:
       - name: Test SSH connection as root
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} 'echo "SSH connection successful as root"'
+
+      - name: Create remote directory
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} 'mkdir -p ${{ env.REMOTE_DIR }}'
 
       - name: Send the files to the server using rsync
         run: |
