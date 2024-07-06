@@ -160,3 +160,5 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: echo "Deploy the application to the production server!"
+
+          rsync -avz --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/var/www/symmetrical-succotash
