@@ -44,7 +44,6 @@ jobs:
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} << 'EOF'
             whoami
             echo "Hello!"
-            node -v
           EOF
 
       - name: Clean up SSH key
