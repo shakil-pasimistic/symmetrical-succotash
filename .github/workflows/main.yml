@@ -52,7 +52,8 @@ jobs:
 
       - name: Send the files to the server using rsync
         run: |
-          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/
+          zip -r build.zip . -x "node_modules/*" -x ".git/*"
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no build.zip ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/
 
       - name: SSH and execute commands as root
         run: |
