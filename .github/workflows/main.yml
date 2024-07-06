@@ -48,7 +48,7 @@ jobs:
 
       - name: Send the files to the server using scp
         run: |
-          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no . ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/
 
       - name: SSH and execute commands as root
         run: |
