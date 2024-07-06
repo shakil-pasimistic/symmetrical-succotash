@@ -41,14 +41,14 @@ jobs:
       - name: Create remote directory
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }} << 'EOF'
-            sudo rm -rf ${{ env.REMOTE_DIR }}  
+            sudo rm -rf ${{ env.REMOTE_DIR }}
             sudo mkdir -p ${{ env.REMOTE_DIR }}
-            sudo chown -R ${{ env.SSH_USERNAME }} ${{ env.REMOTE_DIR }}
+            sudo chmod 755 ${{ env.REMOTE_DIR }}
           EOF
 
       - name: Send the files to the server using rsync
         run: |
-          rsync --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/var/www/symmetrical-succotash
+          rsync -avz --exclude='node_modules' --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa" ./ ${{ env.SSH_USERNAME }}@${{ env.SSH_HOST }}:/var/www/symmetrical-succotash
 
       - name: SSH and execute commands as root
         run: |
